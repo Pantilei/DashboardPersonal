@@ -2,6 +2,7 @@ import weatherAPI from "../api/weatherAPI";
 import backend from "../api/backend";
 import history from "../history";
 import chloteDATA from "../api/clotheDATA";
+import { csv } from "d3-fetch";
 
 export const fetchWeather = (lat, lon) => async dispatch => {
   const response = await weatherAPI.get(
@@ -178,4 +179,37 @@ export const taskFetch = () => async dispatch => {
   //let tasksFromState = getState().user.tasks;
   //let newState = { tasks: tasksFromState.splice(id, 1, taskNew) };
   dispatch({ type: "USER", payload: response.data });
+};
+
+export const fetchWinner = winner => async dispatch => {
+  const data = await csv(
+    "https://cors-anywhere.herokuapp.com/http://www.football-data.co.uk/mmz4281/1718/I1.csv"
+  );
+  let newData = data.map(row => {
+    if (row.FTR === "H") {
+      let res = "Home Win";
+      return { homeTeam: row.HomeTeam, awayTeam: row.AwayTeam, res };
+    } else if (row.FTR === "A") {
+      let res = "Away Win";
+      return { homeTeam: row.HomeTeam, awayTeam: row.AwayTeam, res };
+    } else {
+      let res = "Draw";
+      return { homeTeam: row.HomeTeam, awayTeam: row.AwayTeam, res };
+    }
+  });
+  const loosers = [];
+  const teams = {};
+  newData.forEach(match => {
+    if (match.homeTeam === winner && match.res === "Home Win") {
+      loosers.push(match.awayTeam);
+    } else if (match.awayTeam === winner && match.res === "Away Win") {
+      loosers.push(match.homeTeam);
+    }
+    teams[match.homeTeam] = match.homeTeam;
+    teams[match.awayTeam] = match.awayTeam;
+  });
+  dispatch({
+    type: "WINNER",
+    payload: { winner, loosers, teams: Object.values(teams) }
+  });
 };

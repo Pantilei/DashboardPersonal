@@ -4,8 +4,9 @@
   right: 0;
   height: 100vh;
   width: 100%;
-  background: url("./Assets/Background.png") no-repeat fixed center;
+  background: url("./Assets/Background.png") center;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .welcome {
@@ -308,4 +309,54 @@ input:checked ~ .checkmark::after {
   margin-left: 30%;
   margin-top: 30px;
   cursor: pointer;
+}
+
+.searchForm {
+  display: flex;
+  margin-top: -35vh;
+  width: 600px;
+}
+.searchForm input {
+  width: 90%;
+  padding: 5px;
+  font-size: 2em;
+  color: white;
+}
+.searchBTN {
+  margin-left: 10px;
+  margin-top: 20px;
+  height: 30px;
+  width: 120px;
+  color: white;
+  font-size: 0.7em;
+  background-color: rgba(43, 43, 134, 0.822);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.searchBTN:hover {
+  background-color: rgb(87, 87, 158);
+}
+.teamList {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  margin-left: 100px;
+  margin-top: 100px;
+}
+.teamListItem {
+  padding: 5px;
+  color: white;
+  font-size: 1.3em;
+  width: 30%;
+  margin: 5px;
+  list-style: none;
+  animation: LooserTeams 2s 1 0s linear;
+}
+@keyframes LooserTeams {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
