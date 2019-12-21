@@ -236,7 +236,6 @@ input[type="file"] {
 .taskForm {
   display: flex;
   position: relative;
-  justify-content: center;
   margin-top: 100px;
 }
 .inputTask {
@@ -302,14 +301,18 @@ input:checked ~ .checkmark::after {
     transform: scale(1, 1);
   }
 }
-
+.taskContainerBig {
+  position: relative;
+  width: 70%;
+  margin: 0 auto;
+}
 .taskBtn {
+  position: relative;
   background: url("./Assets/Plus_button_small.png");
   background-size: cover;
   border: none;
   width: 50px;
   height: 50px;
-  margin-left: 30%;
   margin-top: 30px;
   cursor: pointer;
 }
@@ -453,4 +456,9 @@ input:checked ~ .checkmarkTaskMin::after {
   border: none;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.taskDelete:hover {
+  background-color: red;
+  color: white;
 }

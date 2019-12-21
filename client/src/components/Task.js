@@ -14,6 +14,7 @@ class Task extends React.Component {
       //[{ task: "Trying to make two fields", status: true }]
     });
   }
+
   renderTask = formProps => {
     //console.log(formProps);
     //console.log(this.props);
@@ -60,7 +61,7 @@ class Task extends React.Component {
     //console.log(FieldArrayProps);
     const { fields } = FieldArrayProps;
     return (
-      <div>
+      <div className="taskContainerBig">
         {fields.map((member, index) => {
           //console.log("Member is:", member);
           return (
@@ -68,7 +69,10 @@ class Task extends React.Component {
               <button
                 type="button"
                 className="taskDelete"
-                onClick={() => this.props.deleteTask(index)}
+                onClick={() => {
+                  fields.remove(index);
+                  return this.props.deleteTask(index);
+                }}
               >
                 Delete Task
               </button>

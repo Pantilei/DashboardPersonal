@@ -238,5 +238,14 @@ export const deletePhoto = image => async dispatch => {
 };
 
 export const deleteTask = index => async dispatch => {
+  const token = localStorage.getItem("token");
   console.log("Deleting task!", index);
+  const response = await backend.delete("/tasks", {
+    data: { index },
+    headers: { authorization: `Bearer ${token}` }
+  });
+  dispatch({ type: "USER", payload: response.data });
+  // or we can use this one
+  //await dispatch(taskFetch());
+  console.log("Deleting Task after dispatch ", index);
 };

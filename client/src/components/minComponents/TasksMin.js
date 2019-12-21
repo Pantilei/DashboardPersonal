@@ -18,7 +18,7 @@ class TasksMin extends React.Component {
 
   renderTasks = () => {
     return this.props.tasks.slice(0, 4).map((task, index) => {
-      const checked = task.status ? "checked" : "";
+      //const checked = task.status ? "checked" : "";
       return (
         <div key={index} className="taskContainer">
           <h1>{task.task}</h1>

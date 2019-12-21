@@ -17,7 +17,7 @@ class News extends React.Component {
       <div className="news">
         <HomeButton />
         <h1 className="photosHeading">News </h1>
-        <img src={this.props.news.pic} />
+        <img src={this.props.news.pic} alt="NewsPhoto" />
         <h2>{this.props.news.title}</h2>
         <p>{this.props.news.content}</p>
       </div>

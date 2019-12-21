@@ -219,6 +219,36 @@ router.route("/tasks").get(authToken, function(req, res, next) {
     });
   });
 });
+router.route("/tasks").delete(authToken, function(req, res, next) {
+  jwt.verify(req.token, config.sekretKey, function(err, authData) {
+    if (err) {
+      return res.status(401).json({ error: "No user!!! Go to login page!" });
+    }
+    User.findOne({ _id: authData.userId }).then(user => {
+      console.log(req.body.index);
+      const newTaskArray = user.tasks;
+      newTaskArray.splice(req.body.index, 1);
+
+      console.log(">>>>>>>>>>>");
+      //console.log(newTaskArray);
+      User.update(
+        { _id: authData.userId },
+        {
+          $set: {
+            tasks: newTaskArray
+          }
+        }
+      ).then(result => {
+        console.log("This is result:", result);
+        return res.status(200).json({
+          userId: authData.userId,
+          username: authData.username,
+          tasks: newTaskArray
+        });
+      });
+    });
+  });
+});
 
 router.route("/api/news").get(function(req, res, next) {
   let parser = new Parser();
