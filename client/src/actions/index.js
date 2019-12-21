@@ -171,6 +171,7 @@ export const taskUpdate = (taskNew, status, id) => async (
   //let newState = { tasks: tasksFromState.splice(id, 1, taskNew) };
   dispatch({ type: "USER", payload: response.data });
 };
+
 export const taskFetch = () => async dispatch => {
   const token = localStorage.getItem("token");
   const response = await backend.get("/tasks", {
@@ -212,4 +213,30 @@ export const fetchWinner = winner => async dispatch => {
     type: "WINNER",
     payload: { winner, loosers, teams: Object.values(teams) }
   });
+};
+
+export const fetchNews = () => async dispatch => {
+  const response = await backend.get("/api/news");
+  //console.log(response.data);
+  /* const response = {
+    title: "Great Warior",
+    content: "This is content of news",
+    pic: "https://www.helsinkitimes.fi/images/2019/Dec/TIP15-1.jpg"
+  }; */
+  dispatch({ type: "NEWS", payload: response.data });
+};
+
+export const deletePhoto = image => async dispatch => {
+  const token = localStorage.getItem("token");
+  console.log(image);
+  await backend.delete("/photos", {
+    data: { image },
+    headers: { authorization: `Bearer ${token}` }
+  });
+  await dispatch(imageDownload());
+  console.log("deleting the image");
+};
+
+export const deleteTask = index => async dispatch => {
+  console.log("Deleting task!", index);
 };

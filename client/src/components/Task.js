@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { taskUpdate, taskFetch } from "../actions";
+import { taskUpdate, taskFetch, deleteTask } from "../actions";
 import { FieldArray, Field, reduxForm } from "redux-form";
 
 import HomeButton from "./HomeButton";
@@ -51,6 +51,11 @@ class Task extends React.Component {
     );
   };
 
+  /* deleteTask = e => {
+    e.preventDefault();
+    console.log(e);
+    //this.props.deleteTask(index);
+  }; */
   renderTasks = FieldArrayProps => {
     //console.log(FieldArrayProps);
     const { fields } = FieldArrayProps;
@@ -60,6 +65,13 @@ class Task extends React.Component {
           //console.log("Member is:", member);
           return (
             <div key={index} className="taskForm">
+              <button
+                type="button"
+                className="taskDelete"
+                onClick={() => this.props.deleteTask(index)}
+              >
+                Delete Task
+              </button>
               <Field
                 name={`${member}.task`}
                 component={this.renderTask}
@@ -109,4 +121,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { taskUpdate, taskFetch })(myTask);
+export default connect(mapStateToProps, { taskUpdate, taskFetch, deleteTask })(
+  myTask
+);

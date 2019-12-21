@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import HomeButton from "./HomeButton";
-import { onImageSubmit, imageDownload } from "../actions";
+import { onImageSubmit, imageDownload, deletePhoto } from "../actions";
 
 class Photos extends React.Component {
   constructor(props) {
@@ -21,6 +21,10 @@ class Photos extends React.Component {
             width="280px"
             height="280px"
           />
+          <button
+            onClick={() => this.props.deletePhoto(image)}
+            className="photoDeleteBtn"
+          ></button>
         </div>
       );
     });
@@ -66,6 +70,8 @@ class Photos extends React.Component {
 const mapStateToProps = state => {
   return { images: state.user.uploadedImages, id: state.user.userId };
 };
-export default connect(mapStateToProps, { onImageSubmit, imageDownload })(
-  Photos
-);
+export default connect(mapStateToProps, {
+  onImageSubmit,
+  imageDownload,
+  deletePhoto
+})(Photos);

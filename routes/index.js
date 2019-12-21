@@ -3,6 +3,7 @@ var router = express.Router();
 
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+let Parser = require("rss-parser");
 
 const config = require("../config");
 const authToken = require("../middleware/authToken");
@@ -153,6 +154,34 @@ router.route("/photos").get(authToken, function(req, res, next) {
   });
 });
 
+router.route("/photos").delete(authToken, function(req, res, next) {
+  //console.log("BEFORE");
+  jwt.verify(req.token, config.sekretKey, function(err, authData) {
+    //console.log(authData);
+    if (err) {
+      return res.status(401).json({ err: "Not allowed to delete!" });
+    }
+    User.findOne({ _id: authData.userId }).then(user => {
+      let newImageArray = user.uploadedImages.filter(
+        imagePath => req.body.image !== imagePath
+      );
+
+      User.update(
+        { _id: authData.userId },
+        {
+          $set: {
+            uploadedImages: newImageArray
+          }
+        }
+      ).then(result => {
+        //console.log("Deleted");
+        fs.unlinkSync(`${__dirname}/../uploads/${req.body.image}`);
+        return res.status(200).json({ result });
+      });
+    });
+  });
+});
+
 router.route("/tasks").post(authToken, function(req, res, next) {
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     if (err) {
@@ -187,6 +216,19 @@ router.route("/tasks").get(authToken, function(req, res, next) {
         username: authData.username,
         tasks: user.tasks
       });
+    });
+  });
+});
+
+router.route("/api/news").get(function(req, res, next) {
+  let parser = new Parser();
+  parser.parseURL("http://feeds.bbci.co.uk/news/rss.xml").then(feed => {
+    console.log(feed);
+    return res.status(200).json({
+      title: feed.items[0].title,
+      content: feed.items[0].content,
+      pic:
+        "https://ichef.bbci.co.uk/news/660/cpsprodpb/7D27/production/_110193023_mediaitem110193022.jpg"
     });
   });
 });

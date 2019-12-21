@@ -4,11 +4,13 @@ import weatherReducer from "./weatherReducer";
 import userReducer from "./userReducer";
 import clotheReducer from "./clotheReducer";
 import footballReducer from "./footballReducer";
+import newsReducer from "./newsReducer";
 
 export default combineReducers({
   form: formReducer,
   weather: weatherReducer,
   user: userReducer,
   clothe: clotheReducer,
-  sport: footballReducer
+  sport: footballReducer,
+  news: newsReducer
 });
