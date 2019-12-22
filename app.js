@@ -24,20 +24,7 @@ app.use(cors());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //================>
-app.use(express.static(path.join(__dirname, "client/build")));
-//CHEK THIS CODE, IT CAUSES ERROR ON RELOAD OF PAGE//Solved by putting to end of file
-/* if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client/build")));
-  app.get("*", (req, res) => {
-    res.sendfile(path.join((__dirname = "client/build/index.html")));
-  });
-}
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/public/index.html"));
-}); */
-/* app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
-}); */
+
 //=================>
 app.use(fileUpload());
 // view engine setup
@@ -54,8 +41,19 @@ app.use(cors());
 
 //>
 //app.use(express.static(path.join(__dirname, "public")));
-
+app.use(express.static(path.join(__dirname, "client/build")));
 app.use("/", indexRouter);
+/* app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
+}); */
+//build mode
+app.get("/*", function(req, res) {
+  res.sendFile(path.join(__dirname, "client/build/index.html"), function(err) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
 /* app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   next();
@@ -79,13 +77,9 @@ app.use(function(err, req, res, next) {
 //production mode
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join((__dirname = "client/build/index.html")));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join((__dirname, "client/build/index.html")));
   });
 }
-//build mode
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/public/index.html"));
-});
 
 module.exports = app;

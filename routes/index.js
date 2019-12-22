@@ -8,7 +8,7 @@ let Parser = require("rss-parser");
 const config = require("../config");
 const authToken = require("../middleware/authToken");
 
-router.route("/").get(authToken, function(req, res, next) {
+router.route("/api").get(authToken, function(req, res, next) {
   console.log("before verify");
   console.log(req.token);
 
@@ -25,7 +25,7 @@ router.route("/").get(authToken, function(req, res, next) {
   });
 });
 
-router.route("/signup").post(function(req, res, next) {
+router.route("/api/signup").post(function(req, res, next) {
   console.log(req.body);
   User.find({ email: req.body.email }).then(user => {
     if (user.length >= 1) {
@@ -71,7 +71,7 @@ router.route("/signup").post(function(req, res, next) {
   });
 });
 
-router.route("/login").post(function(req, res, next) {
+router.route("/api/login").post(function(req, res, next) {
   console.log(req.body);
   User.find({ email: req.body.email }).then(user => {
     //console.log(user[0].validPassword(req.body.password));
@@ -110,7 +110,7 @@ router.route("/login").post(function(req, res, next) {
   });
 });
 
-router.route("/photos").post(authToken, function(req, res, next) {
+router.route("/api/photos").post(authToken, function(req, res, next) {
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     /* console.log(authData); */
 
@@ -138,7 +138,7 @@ router.route("/photos").post(authToken, function(req, res, next) {
   });
 });
 
-router.route("/photos").get(authToken, function(req, res, next) {
+router.route("/api/photos").get(authToken, function(req, res, next) {
   console.log("========");
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     if (err) {
@@ -154,7 +154,7 @@ router.route("/photos").get(authToken, function(req, res, next) {
   });
 });
 
-router.route("/photos").delete(authToken, function(req, res, next) {
+router.route("/api/photos").delete(authToken, function(req, res, next) {
   //console.log("BEFORE");
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     //console.log(authData);
@@ -182,7 +182,7 @@ router.route("/photos").delete(authToken, function(req, res, next) {
   });
 });
 
-router.route("/tasks").post(authToken, function(req, res, next) {
+router.route("/api/tasks").post(authToken, function(req, res, next) {
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     if (err) {
       return res.status(401).json({ error: "No user!!! Go to login page!" });
@@ -205,7 +205,7 @@ router.route("/tasks").post(authToken, function(req, res, next) {
     });
   });
 });
-router.route("/tasks").get(authToken, function(req, res, next) {
+router.route("/api/tasks").get(authToken, function(req, res, next) {
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     if (err) {
       return res.status(401).json({ error: "No user!!! Go to login page!" });
@@ -219,7 +219,7 @@ router.route("/tasks").get(authToken, function(req, res, next) {
     });
   });
 });
-router.route("/tasks").delete(authToken, function(req, res, next) {
+router.route("/api/tasks").delete(authToken, function(req, res, next) {
   jwt.verify(req.token, config.sekretKey, function(err, authData) {
     if (err) {
       return res.status(401).json({ error: "No user!!! Go to login page!" });

@@ -2,7 +2,7 @@ const INITIAL_STATE = {
   userId: null,
   username: "",
   uploadedImages: [],
-  tasks: [{ task: "Enter your first task", status: true }]
+  tasks: [{ task: "Enter your first task", status: false }]
 };
 
 export default (state = INITIAL_STATE, action) => {

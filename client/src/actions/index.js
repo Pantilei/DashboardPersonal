@@ -22,7 +22,7 @@ export const fetchWeather = (lat, lon) => async dispatch => {
 export const formSignUp = formValues => async dispatch => {
   console.log("response await");
 
-  const response = await backend.post("/signup", formValues);
+  const response = await backend.post("/api/signup", formValues);
   console.log(response.data);
   if (response.data.token) {
     localStorage.setItem("token", response.data.token);
@@ -34,7 +34,7 @@ export const formSignUp = formValues => async dispatch => {
 };
 
 export const formLogIn = formValues => async (dispatch, getState) => {
-  const response = await backend.post("/login", { ...formValues });
+  const response = await backend.post("/api/login", { ...formValues });
   console.log("token from login", response.data.token);
   if (response.data.token) {
     localStorage.setItem("token", response.data.token);
@@ -49,7 +49,7 @@ export const home = () => async dispatch => {
   //console.log("token from home before request", localStorage.getItem("token"));
   //const response = await backend.get("/");
   const token = localStorage.getItem("token");
-  const response = await backend.get("/", {
+  const response = await backend.get("/api", {
     headers: { authorization: `Bearer ${token}` }
   });
   //console.log("token from home", response.data.token);
@@ -60,7 +60,7 @@ export const onImageSubmit = image => async dispatch => {
   console.log("before Image submit");
 
   const token = localStorage.getItem("token");
-  const response = await backend.post("/photos", image, {
+  const response = await backend.post("/api/photos", image, {
     headers: { authorization: `Bearer ${token}` }
   });
   //const response = await backend.post("/photos", image);
@@ -71,12 +71,23 @@ export const onImageSubmit = image => async dispatch => {
 export const imageDownload = () => async dispatch => {
   console.log("waiting for response");
   const token = localStorage.getItem("token");
-  const response = await backend.get("/photos", {
+  const response = await backend.get("/api/photos", {
     headers: { authorization: `Bearer ${token}` }
   });
   //const response = await backend.get("/photos");
   console.log(response.data);
   dispatch({ type: "USER", payload: response.data });
+};
+
+export const deletePhoto = image => async dispatch => {
+  const token = localStorage.getItem("token");
+  console.log(image);
+  await backend.delete("/api/photos", {
+    data: { image },
+    headers: { authorization: `Bearer ${token}` }
+  });
+  await dispatch(imageDownload());
+  console.log("deleting the image");
 };
 
 export const fetchData = () => {
@@ -163,7 +174,7 @@ export const taskUpdate = (taskNew, status, id) => async (
 ) => {
   const token = localStorage.getItem("token");
   const response = await backend.post(
-    "/tasks",
+    "/api/tasks",
     { task: taskNew, status: status, taskId: id },
     { headers: { authorization: `Bearer ${token}` } }
   );
@@ -174,12 +185,24 @@ export const taskUpdate = (taskNew, status, id) => async (
 
 export const taskFetch = () => async dispatch => {
   const token = localStorage.getItem("token");
-  const response = await backend.get("/tasks", {
+  const response = await backend.get("/api/tasks", {
     headers: { authorization: `Bearer ${token}` }
   });
   //let tasksFromState = getState().user.tasks;
   //let newState = { tasks: tasksFromState.splice(id, 1, taskNew) };
   dispatch({ type: "USER", payload: response.data });
+};
+export const deleteTask = index => async dispatch => {
+  const token = localStorage.getItem("token");
+  console.log("Deleting task!", index);
+  const response = await backend.delete("/api/tasks", {
+    data: { index },
+    headers: { authorization: `Bearer ${token}` }
+  });
+  dispatch({ type: "USER", payload: response.data });
+  // or we can use this one
+  //await dispatch(taskFetch());
+  console.log("Deleting Task after dispatch ", index);
 };
 
 export const fetchWinner = winner => async dispatch => {
@@ -224,28 +247,4 @@ export const fetchNews = () => async dispatch => {
     pic: "https://www.helsinkitimes.fi/images/2019/Dec/TIP15-1.jpg"
   }; */
   dispatch({ type: "NEWS", payload: response.data });
-};
-
-export const deletePhoto = image => async dispatch => {
-  const token = localStorage.getItem("token");
-  console.log(image);
-  await backend.delete("/photos", {
-    data: { image },
-    headers: { authorization: `Bearer ${token}` }
-  });
-  await dispatch(imageDownload());
-  console.log("deleting the image");
-};
-
-export const deleteTask = index => async dispatch => {
-  const token = localStorage.getItem("token");
-  console.log("Deleting task!", index);
-  const response = await backend.delete("/tasks", {
-    data: { index },
-    headers: { authorization: `Bearer ${token}` }
-  });
-  dispatch({ type: "USER", payload: response.data });
-  // or we can use this one
-  //await dispatch(taskFetch());
-  console.log("Deleting Task after dispatch ", index);
 };

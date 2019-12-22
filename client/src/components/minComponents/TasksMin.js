@@ -3,22 +3,42 @@ import { connect } from "react-redux";
 import { taskFetch } from "../../actions";
 
 class TasksMin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.checkboxRef = React.createRef();
+  }
   componentDidMount() {
     this.props.taskFetch();
   }
   renderInput = task => {
+    /* console.log("CheckBoxRef: ", this.checkboxRef);
+    if (this.checkboxRef.current) {
+      this.checkboxRef.current.defaultChecked = task.status;
+    } */
     if (task.status) {
       return (
-        <input className="inputCheckbox" type="checkbox" checked readOnly />
+        <input
+          className="inputCheckbox"
+          ref={this.checkboxRef}
+          type="checkbox"
+          checked
+          readOnly
+        />
       );
     } else {
-      return <input className="inputCheckbox" type="checkbox" readOnly />;
+      return (
+        <input
+          className="inputCheckbox"
+          ref={this.checkboxRef}
+          type="checkbox"
+          readOnly
+        />
+      );
     }
   };
 
   renderTasks = () => {
     return this.props.tasks.slice(0, 4).map((task, index) => {
-      //const checked = task.status ? "checked" : "";
       return (
         <div key={index} className="taskContainer">
           <h1>{task.task}</h1>
